@@ -2,6 +2,10 @@
 
 A simple logging module that uses [bunyan](https://github.com/trentm/node-bunyan) and draws inspiration from TJ Hollowaychuk's [debug](https://github.com/visionmedia/debug).
 
+Logging is a universal concern in the vast majority of programs and I wanted to make it as simple as possible. Logging initially appears to be a focused concern, but on closer inspection you can see that it intersects with tracing, analytics, error handling, debugging, and disaster recovery. Bunyan provides the perfect solution to address all of these concerns, and lugg aims to make it really simple to use.
+
+Lugg also provides the ability to control debug output using a `DEBUG` environment variable, and you can even access debug and trace output from a running process using bunyan's runtime log snooping feature (using DTrace).
+
 ## Example Usage
 
 ```javascript
@@ -10,12 +14,13 @@ require('lugg').init();
 
 // then in foo.js
 var log = require('lugg')('foo');
+log.debug('this won't be displayed unless you ask for it');
 log.info('doing stuff');
 log.warn({foo: 'bar'}, 'something %s', 'intersting');
 log.error(new Error('blah'), 'something %s', 'bad');
 ```
 
-Each argument you pass is logged as-is, up to the first string argument, which is formatted with `util.format()` using each of the subsequent arguments for string interpolation.
+lugg uses bunyan, which writes your log output as JSON. Each argument you pass is logged as-is, up to the first string argument, which is formatted with `util.format()` using each of the subsequent arguments for string interpolation.
 
 Read [the source](https://github.com/aexmachina/lugg/blob/master/index.js) (it's tiny) and consult the [bunyan docs](https://github.com/trentm/node-bunyan#features) for more info. 
 
