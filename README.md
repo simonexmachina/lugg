@@ -14,7 +14,7 @@ require('lugg').init();
 
 // then in foo.js
 var log = require('lugg')('foo');
-log.debug('this won't be displayed unless you ask for it');
+log.debug('this will not be output'); // set DEBUG=app:foo to see debug output from this logger
 log.info('doing stuff');
 log.warn({foo: 'bar'}, 'something %s', 'intersting');
 log.error(new Error('blah'), 'something %s', 'bad');
