@@ -4,7 +4,7 @@ A simple logging module that uses [bunyan](https://github.com/trentm/node-bunyan
 
 ## Example Usage
 
-```
+```javascript
 // call init once
 require('lugg').init();
 
@@ -17,13 +17,13 @@ log.error(new Error('blah'), 'something %s', 'bad');
 
 Each argument you pass is logged as-is, up to the first string argument, which is formatted with `util.format()` using each of the subsequent arguments for string interpolation.
 
-Read [the source](index.js) (it's tiny) and consult the [bunyan docs](https://github.com/trentm/node-bunyan#features) for more info. 
+Read [the source](https://github.com/aexmachina/lugg/blob/master/index.js) (it's tiny) and consult the [bunyan docs](https://github.com/trentm/node-bunyan#features) for more info. 
 
 ## Controlling Log Output
 
-The call to `lugg.init()` takes an option hash, which is passed to `bunyan.createLogger()` to create a 'root logger'. All loggers returned from `lugg` are children of this root logger, so they inherit whatever settings you provide to `init()`.
+The call to `lugg.init()` takes an option hash, which is passed to `bunyan.createLogger()` to create a "root logger". All loggers returned from `lugg` are children of this root logger, so they inherit whatever settings you provide to `init()`.
 
-See the docs for `bunyan` for more info about the supported options. `lugg` will provide a name of 'app' if no `name` is provided.
+See the docs for `bunyan` for more info about the supported options. `lugg` will provide a name of "app" if no `name` is provided.
 
 ## Controlling Debug Output
 
