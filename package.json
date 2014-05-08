@@ -1,0 +1,34 @@
+{
+  "name": "lugg",
+  "description": "A simple logging module that uses bunyan and draws inspiration from TJ Hollowaychuk's debug.",
+  "scripts": {
+    "test": "mocha",
+    "test-runner": "mocha -w"
+  },
+  "dependencies": {
+    "bunyan": "^0.22.1"
+  },
+  "version": "0.1.0",
+  "main": "index.js",
+  "devDependencies": {
+    "mocha": "~1.18.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aexmachina/lugg.git"
+  },
+  "keywords": [
+    "log",
+    "logging",
+    "bunyan",
+    "json",
+    "debug",
+    "debugging"
+  ],
+  "author": "Simon Wade <simon.wade@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aexmachina/lugg/issues"
+  },
+  "homepage": "https://github.com/aexmachina/lugg"
+}
