@@ -53,7 +53,14 @@ $ DEBUG=foo,express:* node app.js # print debug output from foo and express
 $ DEBUG=*,-foo node app.js # print all debug output except foo
 ```
 
-As loggers are created, if they have a name that matches this environment variable then they will have their `level` set to `debug`.
+As loggers are created, if they have a name that matches this environment variable then they will have their `level` set to `debug`. You can also manipulate this programmatically using `lugg.debug()`:
+
+```
+lugg.debug('app:foo'); // debug messages from app:foo
+lugg.debug('app:foo:'); // debug messages from app:foo
+```
+
+Be aware this doesn't change any loggers that have already been created.
 
 ## Output
 

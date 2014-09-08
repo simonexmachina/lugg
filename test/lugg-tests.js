@@ -58,6 +58,7 @@ describe('lugg()', function() {
 
 describe('debug', function() {
   beforeEach(function() {
+    debug.parse('');
     lugg.init();
   });
   it('based on environment', function() {
@@ -75,5 +76,14 @@ describe('debug', function() {
     debug.parse('app:*,-app:foo');
     assert.equal(lugg('test').level(), 20);
     assert.equal(lugg('foo').level(), 30);
+  });
+  it('using debug function', function() {
+    lugg.debug('app:foo');
+    assert.equal(lugg('not').level(), 30, 'not');
+    assert.equal(lugg('foo').level(), 20, 'debug foo');
+    lugg.debug('app:foo:disabled', false);
+    assert.equal(lugg('foo:disabled').level(), 30, 'disabled');
+    lugg.debug('-app:foo:minus');
+    assert.equal(lugg('foo:minus').level(), 30, 'minus');
   });
 });
