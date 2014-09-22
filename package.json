@@ -6,7 +6,7 @@
     "test-runner": "mocha -w"
   },
   "dependencies": {
-    "bunyan": "^0.22.1"
+    "bunyan": "^1.0.1"
   },
   "version": "0.2.0",
   "main": "index.js",
