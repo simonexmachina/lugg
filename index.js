@@ -25,7 +25,8 @@ function createLogger(name, options, simple) {
   }
 
   options = defaults(options, {
-    module: name
+    module: name,
+    level: bunyan.FATAL + 1
   });
 
   if (isDebugEnabled(fmt('%s:%s', rootName, name))) {

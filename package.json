@@ -6,7 +6,7 @@
     "test-runner": "mocha -w"
   },
   "dependencies": {
-    "bunyan": "^1.0.1",
+    "bunyan": "^1.2.3",
     "defaults": "^1.0.0",
     "mocha": "^2.0.1"
   },
