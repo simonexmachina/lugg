@@ -1,33 +1,63 @@
+
+/**
+ * Module dependencies.
+ */
+
 var bunyan = require('bunyan'),
     debug = require('./lib/debug-env'),
-    debugEnabled = require('./lib/debug-env').enabled,
-    rootLogger, rootName;
+    defaults = require('defaults'),
+    fmt = require('util').format,
+    isDebugEnabled = require('./lib/debug-env').enabled,
+    rootLogger,
+    rootName;
 
-var exports = module.exports = createLogger;
+/**
+ * Create a logger instance.
+ */
 
-function createLogger(name, options) {
+function createLogger(name, options, simple) {
   if (!rootLogger) {
-    throw new Error('No root logger - did you forget to call lugger.init()');
+    throw new Error('No root logger available.');
   }
-  if (name) {
-    var opts = options || {},
-        simple = !!options; // enable bunyan's fast path for child creation
-    if (debugEnabled(rootName + ':' + name)) {
-      opts.level = 'debug';
-    }
-    opts.module = opts.module || name;
-    return rootLogger.child(opts, simple);
-  }
-  else {
+
+  if (!name) {
     return rootLogger;
   }
+
+  options = defaults(options, {
+    module: name
+  });
+
+  if (isDebugEnabled(fmt('%s:%s', rootName, name))) {
+    options.level = 'debug';
+  }
+
+  return rootLogger.child(options, !!simple);
 }
 
-exports.init = function(options) {
-  var opts = options || {};
-  rootName = opts.name = opts.name || 'app';
-  rootLogger = bunyan.createLogger(opts);
+/**
+ * Export `createLogger`.
+ */
+
+module.exports = createLogger;
+
+/**
+ * Export `init`.
+ */
+
+module.exports.init = function(options) {
+  options = defaults(options, {
+    name: 'app'
+  });
+
+  rootLogger = bunyan.createLogger(options);
+  rootName = rootLogger.fields.name;
+
   return createLogger;
 };
 
-exports.debug = debug.add;
+/**
+ * Export `debug`.
+ */
+
+module.exports.debug = debug.add;
