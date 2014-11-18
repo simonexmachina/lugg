@@ -1,7 +1,7 @@
 var bunyan = require('bunyan'),
     debug = require('./lib/debug-env'),
     debugEnabled = require('./lib/debug-env').enabled,
-    rootLogger, rootName, loggers = [];
+    rootLogger, rootName;
 
 var exports = module.exports = createLogger;
 
