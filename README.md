@@ -20,7 +20,7 @@ At first glance, logging appears to be an isolated concern, but on closer inspec
 
 ## Example Usage
 
-```
+```javascript
 // call init once in your program
 require('lugg').init();
 
@@ -38,13 +38,32 @@ Read [the source](https://github.com/aexmachina/lugg/blob/master/index.js) (it's
 
 ## Controlling Log Output
 
-The call to `lugg.init()` takes an option hash, which is passed to `bunyan.createLogger()` to create a "root logger". All loggers returned from `lugg` are children of this root logger, so they inherit whatever settings you provide to `init()`.
+You can control the output of lugg using the `level` option:
 
-See the docs for `bunyan` for more info about the supported options. `lugg` will provide a name of "app" if no `name` is provided.
+```javascript
+require('lugg').init({level: 'warn'}); // show only warnings and higher
+```
+
+The logging level you provide in the call to `.init()` would typically come
+from your local configuration (eg. `warn` in production, `info` in
+development).
+
+You can also manipulate the logging level for specific loggers at runtime,
+without having to modify your configuration, using an environment variable (see
+[Controlling Debug Output](#controlling-debug-output) below).
+
+The call to `lugg.init()` takes an option hash, which is passed to
+`bunyan.createLogger()` to create a "root logger". All loggers returned from
+`lugg` are children of this root logger, so they inherit whatever settings
+you provide to `init()`.
+
+See the docs for `bunyan` for more info about the supported options. `lugg` will
+provide a name of "app" if no `name` is provided.
 
 ## Controlling Debug Output
 
-The log level can be manipulated using the `DEBUG` environment variable, using the same approach as the `debug` module:
+The log level can be manipulated using the `DEBUG` environment variable, using
+the same approach as the `debug` module:
 
 ```shell
 $ DEBUG=* node app.js # print all debug output
@@ -55,7 +74,7 @@ $ DEBUG=*,-foo node app.js # print all debug output except foo
 
 As loggers are created, if they have a name that matches this environment variable then they will have their `level` set to `debug`. You can also manipulate this programmatically using `lugg.debug()`:
 
-```
+```javascript
 lugg.debug('app:foo'); // debug messages from app:foo
 lugg.debug('app:foo:'); // debug messages from app:foo
 ```
@@ -66,6 +85,8 @@ Be aware this doesn't change any loggers that have already been created.
 
 `bunyan` writes logs to stdout in JSON format, so pipe the output through the `bunyan` CLI to get logs in a more human readable format:
 
-    node app | bunyan --output short
+```shell
+node app | bunyan --output short
+```
 
 The [`bunyan` CLI](https://github.com/trentm/node-bunyan#cli-usage) also provides features for filtering your log output.
