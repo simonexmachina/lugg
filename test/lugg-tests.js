@@ -1,6 +1,7 @@
 var lugg = require('..'),
     debug = require('../lib/debug-env.js'),
-    assert = require('assert');
+    assert = require('assert'),
+    bunyan = require('bunyan');
 
 describe('lugg.init()', function() {
   it('with no arguments', function() {
@@ -16,7 +17,7 @@ describe('lugg.init()', function() {
     var log = lugg();
     assert.equal(log.fields.name, 'theName');
     assert(log.streams[0].stream == process.stderr);
-    assert(log.streams[0].level == 30);
+    assert(log.streams[0].level == bunyan.INFO);
   });
   it('can specify the log level', function() {
     lugg.init({
@@ -25,7 +26,7 @@ describe('lugg.init()', function() {
       level: 'error'
     });
     var log = lugg();
-    assert.equal(log.level(), 50);
+    assert.equal(log.level(), bunyan.ERROR);
   });
 });
 
@@ -52,7 +53,7 @@ describe('lugg()', function() {
   it('can set log level', function() {
     var log = lugg('test');
     log.level('error');
-    assert.equal(log.level(), 50);
+    assert.equal(log.level(), bunyan.ERROR);
   });
 });
 
@@ -64,26 +65,26 @@ describe('debug', function() {
   it('based on environment', function() {
     process.env.DEBUG = 'app:test';
     debug.update();
-    assert.equal(lugg('test').level(), 20, 'app:test is debug');
-    assert.equal(lugg('foo').level(), 30, 'app:foo is not debug');
+    assert.equal(lugg('test').level(), bunyan.DEBUG, 'app:test is debug');
+    assert.equal(lugg('foo').level(), bunyan.INFO, 'app:foo is not debug');
   });
   it('app:*', function() {
     debug.parse('app:*');
-    assert.equal(lugg('test').level(), 20, 'app:test is debug');
-    assert.equal(lugg('foo').level(), 20, 'app:foo is debug');
+    assert.equal(lugg('test').level(), bunyan.DEBUG, 'app:test is debug');
+    assert.equal(lugg('foo').level(), bunyan.DEBUG, 'app:foo is debug');
   });
   it('app:*,-app:foo', function() {
     debug.parse('app:*,-app:foo');
-    assert.equal(lugg('test').level(), 20);
-    assert.equal(lugg('foo').level(), 30);
+    assert.equal(lugg('test').level(), bunyan.DEBUG);
+    assert.equal(lugg('foo').level(), bunyan.INFO);
   });
   it('using debug function', function() {
     lugg.debug('app:foo');
-    assert.equal(lugg('not').level(), 30, 'not');
-    assert.equal(lugg('foo').level(), 20, 'debug foo');
+    assert.equal(lugg('not').level(), bunyan.INFO, 'not');
+    assert.equal(lugg('foo').level(), bunyan.DEBUG, 'debug foo');
     lugg.debug('app:foo:disabled', false);
-    assert.equal(lugg('foo:disabled').level(), 30, 'disabled');
+    assert.equal(lugg('foo:disabled').level(), bunyan.INFO, 'disabled');
     lugg.debug('-app:foo:minus');
-    assert.equal(lugg('foo:minus').level(), 30, 'minus');
+    assert.equal(lugg('foo:minus').level(), bunyan.INFO, 'minus');
   });
 });
