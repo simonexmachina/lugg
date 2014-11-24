@@ -86,5 +86,8 @@ describe('debug', function() {
     assert.equal(lugg('foo:disabled').level(), bunyan.INFO, 'disabled');
     lugg.debug('-app:foo:minus');
     assert.equal(lugg('foo:minus').level(), bunyan.INFO, 'minus');
+    lugg.debug('*app*');
+    assert.equal(lugg('bar').level(), bunyan.DEBUG, 'debug bar');
+    assert.equal(lugg('biz').level(), bunyan.DEBUG, 'debug biz');
   });
 });
