@@ -89,4 +89,4 @@ bunyan writes logs to stdout in JSON format, so pipe the output through the buny
 node app | bunyan --output short
 ```
 
-The [bunyan CLI](https://github.com/trentm/node-bunyan#cli-usage) also provides features for filtering your log output.
+The [bunyan CLI](https://github.com/trentm/node-bunyan#cli-usage) also provides many features for filtering your log output, for example `bunyan --output short` is awesome for development.
