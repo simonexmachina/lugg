@@ -7,7 +7,7 @@ var exports = module.exports = createLogger;
 
 function createLogger(name, options) {
   if (!rootLogger) {
-    throw new Error('No root logger - did you forget to call lug.init()');
+    throw new Error('No root logger - did you forget to call lugg.init()');
   }
   if (name) {
     var opts = options || {},
