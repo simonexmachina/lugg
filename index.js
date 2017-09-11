@@ -1,4 +1,4 @@
-var bunyan = require('bunyan'),
+var pino = require('pino'),
     debug = require('./lib/debug-env'),
     debugEnabled = require('./lib/debug-env').enabled,
     rootLogger, rootName, loggers = [];
@@ -10,13 +10,12 @@ function createLogger(name, options) {
     throw new Error('No root logger - did you forget to call lugg.init()');
   }
   if (name) {
-    var opts = options || {},
-        simple = !!options; // enable bunyan's fast path for child creation
+    var opts = options || {};
     if (debugEnabled(rootName + ':' + name)) {
       opts.level = 'debug';
     }
-    opts.module = opts.module || name;
-    return rootLogger.child(opts, simple);
+    opts.name = opts.name || name;
+    return rootLogger.child(opts);
   }
   else {
     return rootLogger;
@@ -26,7 +25,7 @@ function createLogger(name, options) {
 exports.init = function(options) {
   var opts = options || {};
   rootName = opts.name = opts.name || 'app';
-  rootLogger = bunyan.createLogger(opts);
+  rootLogger = pino(opts);
   return createLogger;
 };
 

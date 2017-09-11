@@ -1,13 +1,14 @@
 var lugg = require('..'),
     debug = require('../lib/debug-env.js'),
     assert = require('assert'),
-    bunyan = require('bunyan');
+    pino = require('pino');
 
+var levels = pino.levels.values;
 describe('lugg.init()', function() {
   it('with no arguments', function() {
     lugg.init();
     var log = lugg();
-    assert.equal(log.fields.name, 'app');
+    assert.equal(log.name, 'app')
   });
   it('with arguments', function() {
     lugg.init({
@@ -15,9 +16,7 @@ describe('lugg.init()', function() {
       stream: process.stderr
     });
     var log = lugg();
-    assert.equal(log.fields.name, 'theName');
-    assert(log.streams[0].stream == process.stderr);
-    assert(log.streams[0].level == bunyan.INFO);
+    assert.equal(log.name, 'theName');
   });
   it('can specify the log level', function() {
     lugg.init({
@@ -26,7 +25,7 @@ describe('lugg.init()', function() {
       level: 'error'
     });
     var log = lugg();
-    assert.equal(log.level(), bunyan.ERROR);
+    assert.equal(log.level, 'error');
   });
 });
 
@@ -35,25 +34,21 @@ describe('lugg()', function() {
     lugg.init();
   });
   it('returns createLogger on init', function() {
-    var log = lugg.init()('test');
-    assert.equal(log.fields.module, 'test');
+    var log = lugg.init()('test', {
+      foo: 'bar'
+    });
+    assert(hasChinding(log, 'foo', 'bar'));
   })
   it('creates loggers', function() {
     var log = lugg('test');
-    assert.equal(log.fields.name, 'app');
-    assert.equal(log.fields.module, 'test');
+    assert(hasChinding(log, 'name', 'test'));
   })
   it('accepts options', function() {
     var log = lugg('test', {
       foo: 'bar'
     });
-    assert.equal(log.fields.module, 'test');
-    assert.equal(log.fields.foo, 'bar');
-  });
-  it('can set log level', function() {
-    var log = lugg('test');
-    log.level('error');
-    assert.equal(log.level(), bunyan.ERROR);
+    assert(hasChinding(log, 'name', 'test'));
+    assert(hasChinding(log, 'foo', 'bar'));
   });
 });
 
@@ -65,29 +60,33 @@ describe('debug', function() {
   it('based on environment', function() {
     process.env.DEBUG = 'app:test';
     debug.update();
-    assert.equal(lugg('test').level(), bunyan.DEBUG, 'app:test is debug');
-    assert.equal(lugg('foo').level(), bunyan.INFO, 'app:foo is not debug');
+    assert.equal(lugg('test').level, 'debug', 'app:test is debug');
+    assert.equal(lugg('foo').level, 'info', 'app:foo is not debug');
   });
   it('app:*', function() {
     debug.parse('app:*');
-    assert.equal(lugg('test').level(), bunyan.DEBUG, 'app:test is debug');
-    assert.equal(lugg('foo').level(), bunyan.DEBUG, 'app:foo is debug');
+    assert.equal(lugg('test').level, 'debug', 'app:test is debug');
+    assert.equal(lugg('foo').level, 'debug', 'app:foo is debug');
   });
   it('app:*,-app:foo', function() {
     debug.parse('app:*,-app:foo');
-    assert.equal(lugg('test').level(), bunyan.DEBUG);
-    assert.equal(lugg('foo').level(), bunyan.INFO);
+    assert.equal(lugg('test').level, 'debug');
+    assert.equal(lugg('foo').level, 'info');
   });
   it('using debug function', function() {
     lugg.debug('app:foo');
-    assert.equal(lugg('not').level(), bunyan.INFO, 'not');
-    assert.equal(lugg('foo').level(), bunyan.DEBUG, 'debug foo');
+    assert.equal(lugg('not').level, 'info', 'not');
+    assert.equal(lugg('foo').level, 'debug', 'debug foo');
     lugg.debug('app:foo:disabled', false);
-    assert.equal(lugg('foo:disabled').level(), bunyan.INFO, 'disabled');
+    assert.equal(lugg('foo:disabled').level, 'info', 'disabled');
     lugg.debug('-app:foo:minus');
-    assert.equal(lugg('foo:minus').level(), bunyan.INFO, 'minus');
+    assert.equal(lugg('foo:minus').level, 'info', 'minus');
     lugg.debug('*app*');
-    assert.equal(lugg('bar').level(), bunyan.DEBUG, 'debug bar');
-    assert.equal(lugg('biz').level(), bunyan.DEBUG, 'debug biz');
+    assert.equal(lugg('bar').level, 'debug', 'debug bar');
+    assert.equal(lugg('biz').level, 'debug', 'debug biz');
   });
 });
+
+function hasChinding(log, name, value) {
+  return log.chindings.match(',"' + name + '":"' + value + '"')
+}
