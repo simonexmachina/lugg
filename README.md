@@ -8,7 +8,7 @@ Logging is a universal concern in most programs, and `lugg` aims to make the com
 
 #### Based on pino
 
-> Manifesto: Server logs should be structured. JSON's a good format. Let's do that. A log record is one line of `JSON.stringify`'d output. 
+> Manifesto: Server logs should be structured. JSON's a good format. Let's do that. A log record is one line of `JSON.stringify`'d output.
 
 At first glance, logging appears to be an isolated concern, but on closer inspection you can see that it intersects with analytics, error handling, debugging and disaster recovery. The pino module provides a great solution to address all of these concerns.
 
@@ -17,6 +17,12 @@ At first glance, logging appears to be an isolated concern, but on closer inspec
 #### Inspired by debug
 
 `lugg` also provides the ability to control debug output using a `DEBUG` environment variable.
+
+## Installation
+```
+npm install --save lugg
+npm install --save pino
+```
 
 ## Example Usage
 
