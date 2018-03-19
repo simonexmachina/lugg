@@ -6,9 +6,9 @@ A simple logging module that uses [pino](https://github.com/pinojs/pino) and dra
 
 Logging is a universal concern in most programs, and `lugg` aims to make the common usage pattern as simple as possible.
 
-#### Based on pino
-
 > Manifesto: Server logs should be structured. JSON's a good format. Let's do that. A log record is one line of `JSON.stringify`'d output. 
+
+#### Based on pino
 
 At first glance, logging appears to be an isolated concern, but on closer inspection you can see that it intersects with analytics, error handling, debugging and disaster recovery. The pino module provides a great solution to address all of these concerns.
 
@@ -32,11 +32,13 @@ log.error(new Error('blah'), 'something %s', 'bad');
 log.debug('this will not be output'); // set DEBUG=app:foo to see debug output from this logger
 ```
 
+### Arguments
+
 Each argument you pass is logged as-is, up to the first string argument, which is formatted using `util.format()` to provide string interpolation of any subsequent arguments.
 
-Read [the source](https://github.com/aexmachina/lugg/blob/master/index.js) (it's tiny) and refer the [pino docs](http://getpino.io/#/docs) for more info.
-
 ## Controlling Log Output
+
+Read [the source](https://github.com/aexmachina/lugg/blob/master/index.js) (it's tiny) and refer the [pino docs](http://getpino.io/#/docs) for more info.
 
 You can control the output of lugg using the `level` option:
 
