@@ -22,10 +22,14 @@ function createLogger(name, options) {
   }
 }
 
-exports.init = function(options) {
+exports.init = function(options, destination) {
+  if (options && (options.writable || options._writableState)) {
+    destination = options;
+    options = null;
+  }
   var opts = options || {};
   rootName = opts.name = opts.name || 'app';
-  rootLogger = pino(opts);
+  rootLogger = pino(opts, destination);
   return createLogger;
 };
 
