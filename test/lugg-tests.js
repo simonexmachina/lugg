@@ -1,22 +1,31 @@
 var lugg = require('..'),
     debug = require('../lib/debug-env.js'),
     assert = require('assert'),
-    pino = require('pino');
+    pino = require('pino'),
+    hasChinding = require('./helper').hasChinding,
+    sink = require('./helper').sink,
+    once = require('./helper').once;
 
 var levels = pino.levels.values;
 describe('lugg.init()', function() {
-  it('with no arguments', function() {
-    lugg.init();
-    var log = lugg();
-    assert.equal(log.name, 'app')
+  it('with no options', function() {
+    var stream = sink();
+    lugg.init(stream);
+    lugg().info('hello world');
+    return once(stream, 'data').then(function (log) {
+      assert.equal(log.name, 'app');
+    });
   });
-  it('with arguments', function() {
+  it('with options', function() {
+    var stream = sink();
     lugg.init({
       name: 'theName',
       stream: process.stderr
+    }, stream);
+    lugg().info('hello world');
+    return once(stream, 'data').then(function (log) {
+      assert.equal(log.name, 'theName');
     });
-    var log = lugg();
-    assert.equal(log.name, 'theName');
   });
   it('can specify the log level', function() {
     lugg.init({
@@ -38,11 +47,11 @@ describe('lugg()', function() {
       foo: 'bar'
     });
     assert(hasChinding(log, 'foo', 'bar'));
-  })
+  });
   it('creates loggers', function() {
     var log = lugg('test');
     assert(hasChinding(log, 'name', 'test'));
-  })
+  });
   it('accepts options', function() {
     var log = lugg('test', {
       foo: 'bar'
@@ -86,7 +95,3 @@ describe('debug', function() {
     assert.equal(lugg('biz').level, 'debug', 'debug biz');
   });
 });
-
-function hasChinding(log, name, value) {
-  return log.chindings.match(',"' + name + '":"' + value + '"')
-}
