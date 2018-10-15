@@ -85,8 +85,8 @@ Be aware this doesn't change any loggers that have already been created.
 
 ## Output
 
-pino writes logs to stdout in JSON format, so pipe the output through the pino CLI to get logs in a more human readable format:
+pino writes logs to stdout in JSON format, so pipe the output through the pino-pretty CLI to get logs in a more human readable format:
 
 ```shell
-node app.js | pino
+node app.js | pino-pretty
 ```
